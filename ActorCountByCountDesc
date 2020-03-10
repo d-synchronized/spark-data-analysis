@@ -1,0 +1,5 @@
+moviesRdd
+.map(line => {val lineArr = line.split("\t"); (lineArr(0), 1) })
+.reduceByKey((x,y) => x + y)
+.sortBy(pair => pair._2 , false)
+.collect
