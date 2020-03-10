@@ -1,6 +1,16 @@
-val moviesRdd = spark.sparkContext.textFile("C://Users//anand.dishant//Documents//Big-Data//spark-practice//files//data//movies//movies.tsv");
+val moviesRdd = spark.sparkContext.textFile("~hdfslocation~//~~~//files//data//movies//movies.tsv");
 
 moviesRdd.map(line => {val stringArray = line.split("\t"); (stringArray(1) , stringArray(2))})
-.reduceByKey((total,value) => value).map(tuple => (tuple._2,tuple._1))
+.reduceByKey((total,value) => value)
+.map(tuple => (tuple._2,tuple._1))
 .groupByKey.map(tuple => (tuple._1 , tuple._2.size))
-.sortByKey(false).collect
+.sortByKey(false)
+.collect
+
+
+//optimized method for above calculation
+moviesRdd.map(line => {val stringArray = line.split("\t"); (stringArray(2) , stringArray(1))})
+.groupByKey
+.mapValues(v => v.toSet.size)
+.sortByKey(false)
+.collect
